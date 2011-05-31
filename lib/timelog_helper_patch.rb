@@ -1,14 +1,10 @@
-require_dependency 'timelog_helper'
-
 module TimelogHelperPatch
 
   def self.included(base)
     base.send(:include, InstanceMethods)
-
     base.class_eval do
       alias_method_chain :format_criteria_value, :project_txt_breadcrumb
     end
-    
   end
   
   module InstanceMethods
@@ -36,7 +32,7 @@ module TimelogHelperPatch
             if enable_link
               b += ancestors.collect {|p| link_to_project(p) }
             else
-              b += ancestors.collect {|p| p.name }
+              b += ancestors.collect {|p| to_utf8(p.name) }
             end
           end
           if enable_link
@@ -44,7 +40,7 @@ module TimelogHelperPatch
             return b.join( " &raquo; " )
           else
             b << obj.name
-            return b.join( " » " )
+            return b.join( " | " )
           end
         else
           obj
@@ -56,5 +52,3 @@ module TimelogHelperPatch
     
   end
 end
-
-TimelogHelper.send(:include, TimelogHelperPatch)
