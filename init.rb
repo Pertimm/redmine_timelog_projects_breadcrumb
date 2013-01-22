@@ -1,5 +1,3 @@
-require 'redmine'
-
 ActionDispatch::Callbacks.to_prepare do
   require_dependency 'timelog_helper_patch'
   TimelogHelper.send(:include, TimelogHelperPatch)
