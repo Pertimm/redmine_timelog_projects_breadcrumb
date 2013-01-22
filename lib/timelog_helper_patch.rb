@@ -20,7 +20,7 @@ module TimelogHelperPatch
     def format_criteria_value_patch(criteria, value, enable_link = false)
       if value.blank?
         l(:label_none)
-      elsif k = @available_criterias[criteria][:klass]
+      elsif k = criteria[:klass]
         obj = k.find_by_id(value.to_i)
         
         if obj.is_a?(Issue)
@@ -32,21 +32,21 @@ module TimelogHelperPatch
             if enable_link
               b += ancestors.collect {|p| link_to_project(p) }
             else
-              b += ancestors.collect {|p| to_utf8(p.name) }
+              b += ancestors.collect {|p| p.name }
             end
           end
           if enable_link
             b << link_to_project(obj)
-            return b.join( " &raquo; " )
+            return b.join( " &raquo; " ).html_safe
           else
             b << obj.name
-            return b.join( " | " )
+            return b.join( " | " ).html_safe.encode('UTF-8', 'ISO-8859-1')
           end
         else
           obj
         end
       else
-        format_value(value, @available_criterias[criteria][:format])
+        format_value(value, criteria[:format])
       end
     end
     
